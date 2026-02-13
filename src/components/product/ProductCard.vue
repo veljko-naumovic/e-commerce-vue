@@ -1,9 +1,20 @@
 <script setup lang="ts">
+import { useCartStore } from "@/stores/cart";
 import type { Product } from "@/types/product";
 
-defineProps<{
+const props = defineProps<{
     product: Product;
 }>();
+
+
+const cartStore = useCartStore();
+
+const handleAdd = () => {
+    if (props.product.stock > 0) {
+        cartStore.addToCart(props.product);
+    }
+};
+
 </script>
 
 <template>
@@ -15,12 +26,10 @@ defineProps<{
 
         <div class="bottom">
             <span class="price">${{ product.price }}</span>
-            <span v-if="product.stock > 0" class="stock in">
-                In stock
-            </span>
-            <span v-else class="stock out">
-                Out of stock
-            </span>
+
+            <button :disabled="product.stock === 0" @click="handleAdd">
+                Add to Cart
+            </button>
         </div>
     </div>
 </template>
@@ -58,6 +67,20 @@ defineProps<{
 
     .stock.out {
         color: red;
+    }
+
+    button {
+        padding: 6px 10px;
+        background: black;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
     }
 }
 </style>

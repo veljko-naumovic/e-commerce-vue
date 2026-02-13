@@ -3,6 +3,8 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 import { useAuthStore } from "./stores/auth";
+import { useCartStore } from "@/stores/cart";
+
 import "./styles/main.scss";
 
 const app = createApp(App);
@@ -11,6 +13,8 @@ app.use(createPinia());
 app.use(router);
 
 const auth = useAuthStore();
+const cart = useCartStore();
 auth.hydrate();
+cart.hydrate();
 
 app.mount("#app");

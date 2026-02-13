@@ -2,12 +2,13 @@
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
-// cart store ćemo dodati kasnije
+import { useCartStore } from "@/stores/cart";
+
+const cartStore = useCartStore();
 
 const router = useRouter();
 const auth = useAuthStore();
 
-// privremeni fake broj
 const cartCount = computed(() => 0);
 
 const logout = () => {
@@ -25,7 +26,7 @@ const logout = () => {
         <nav>
             <RouterLink to="/">Shop</RouterLink>
             <RouterLink to="/cart">
-                Cart ({{ cartCount }})
+                Cart ({{ cartStore.totalItems }})
             </RouterLink>
 
             <RouterLink v-if="auth.isAuthenticated" to="/admin">
