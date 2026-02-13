@@ -10,11 +10,12 @@ interface CartItem {
 export const useCartStore = defineStore("cart", () => {
 	const items = ref<CartItem[]>([]);
 
-	//  Derived state
+	// count of items
 	const totalItems = computed(() =>
 		items.value.reduce((sum, item) => sum + item.quantity, 0),
 	);
 
+	//  total price
 	const totalPrice = computed(() =>
 		items.value.reduce(
 			(sum, item) => sum + item.product.price * item.quantity,
@@ -22,7 +23,7 @@ export const useCartStore = defineStore("cart", () => {
 		),
 	);
 
-	//  Persist
+	//  check local storage
 	const persist = () => {
 		localStorage.setItem("cart", JSON.stringify(items.value));
 	};
@@ -34,7 +35,7 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	};
 
-	//  Add
+	// add to chart
 	const addToCart = (product: Product) => {
 		const existing = items.value.find(
 			(item) => item.product.id === product.id,
@@ -49,7 +50,7 @@ export const useCartStore = defineStore("cart", () => {
 		persist();
 	};
 
-	//  Remove
+	// remove from chart
 	const removeFromCart = (productId: number) => {
 		items.value = items.value.filter(
 			(item) => item.product.id !== productId,
@@ -58,7 +59,7 @@ export const useCartStore = defineStore("cart", () => {
 		persist();
 	};
 
-	//  Update quantity
+	//  update quantity
 	const updateQuantity = (productId: number, quantity: number) => {
 		const item = items.value.find((item) => item.product.id === productId);
 
