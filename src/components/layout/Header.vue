@@ -10,7 +10,7 @@ const auth = useAuthStore();
 // privremeni fake broj
 const cartCount = computed(() => 0);
 
-function logout() {
+const logout = () => {
     auth.logout();
     router.push("/");
 }

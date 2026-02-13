@@ -10,7 +10,7 @@ const error = ref("");
 const router = useRouter();
 const auth = useAuthStore();
 
-function handleLogin() {
+const handleLogin = () => {
     const success = auth.login(email.value, password.value);
 
     if (!success) {

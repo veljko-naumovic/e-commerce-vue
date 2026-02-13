@@ -10,7 +10,7 @@ export const useAuthStore = defineStore("auth", () => {
 
 	const isAuthenticated = computed(() => !!user.value);
 
-	function login(email: string, password: string) {
+	const login = (email: string, password: string) => {
 		// Fake auth logic
 		if (email === "admin@test.com" && password === "1234") {
 			user.value = { email };
@@ -19,25 +19,25 @@ export const useAuthStore = defineStore("auth", () => {
 		}
 
 		return false;
-	}
+	};
 
-	function logout() {
+	const logout = () => {
 		user.value = null;
 		localStorage.removeItem("auth_user");
-	}
+	};
 
-	function persist() {
+	const persist = () => {
 		if (user.value) {
 			localStorage.setItem("auth_user", JSON.stringify(user.value));
 		}
-	}
+	};
 
-	function hydrate() {
+	const hydrate = () => {
 		const stored = localStorage.getItem("auth_user");
 		if (stored) {
 			user.value = JSON.parse(stored);
 		}
-	}
+	};
 
 	return {
 		user,
