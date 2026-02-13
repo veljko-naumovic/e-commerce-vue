@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCartStore } from "@/stores/cart";
 import type { Product } from "@/types/product";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
     product: Product;
@@ -8,11 +9,16 @@ const props = defineProps<{
 
 
 const cartStore = useCartStore();
+const router = useRouter();
 
 const handleAdd = () => {
     if (props.product.stock > 0) {
         cartStore.addToCart(props.product);
     }
+};
+
+const goToDetails = () => {
+    router.push(`/product/${props.product.id}`);
 };
 
 </script>
@@ -21,7 +27,7 @@ const handleAdd = () => {
     <div class="card">
         <img :src="product.image" :alt="product.title" />
 
-        <h3>{{ product.title }}</h3>
+        <h3 @click="goToDetails" class="clickable">{{ product.title }}</h3>
         <p>{{ product.description }}</p>
 
         <div class="bottom">
