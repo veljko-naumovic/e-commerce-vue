@@ -59,6 +59,42 @@ export const useProductsStore = defineStore("products", () => {
 	const getProductById = (id: number) => {
 		return products.value.find((p) => p.id === id);
 	};
+	/////////////////////
+	const addProduct = (product: Product) => {
+		products.value.push(product);
+	};
+
+	// ✏️ UPDATE
+	const updateProduct = (updated: Product) => {
+		const index = products.value.findIndex((p) => p.id === updated.id);
+		if (index !== -1) {
+			products.value[index] = updated;
+		}
+	};
+
+	// 🗑 DELETE
+	const deleteProduct = (id: number) => {
+		products.value = products.value.filter((p) => p.id !== id);
+	};
+
+	// 💎 Optimistic price update
+	const updatePriceOptimistic = (id: number, newPrice: number) => {
+		const product = products.value.find((p) => p.id === id);
+		if (!product) return;
+
+		const oldPrice = product.price;
+
+		product.price = newPrice;
+
+		// Simulacija API call-a
+		setTimeout(() => {
+			const success = true; // promeni u false da simuliraš error
+
+			if (!success) {
+				product.price = oldPrice;
+			}
+		}, 800);
+	};
 
 	return {
 		products,
@@ -70,5 +106,9 @@ export const useProductsStore = defineStore("products", () => {
 		setCategory,
 		setSort,
 		getProductById,
+		addProduct,
+		updateProduct,
+		deleteProduct,
+		updatePriceOptimistic,
 	};
 });
