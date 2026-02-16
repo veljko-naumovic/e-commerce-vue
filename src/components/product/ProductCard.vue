@@ -23,7 +23,24 @@ const handleAdd = () => {
 
 <template>
     <div class="card">
-        <img :src="product.image" :alt="product.title" @click="goToDetails" />
+        <div class="image-wrapper">
+            <!-- DISCOUNT BADGE -->
+            <span v-if="product.discount" class="badge discount">
+                -{{ product.discount }}%
+            </span>
+
+            <!-- LOW STOCK BADGE -->
+            <span v-else-if="product.stock > 0 && product.stock < 5" class="badge low">
+                Low Stock
+            </span>
+
+            <!-- OUT OF STOCK -->
+            <span v-else-if="product.stock === 0" class="badge out">
+                Out of Stock
+            </span>
+
+            <img :src="product.image" :alt="product.title" @click="goToDetails" />
+        </div>
 
         <h3 @click="goToDetails">
             {{ product.title }}
@@ -32,7 +49,19 @@ const handleAdd = () => {
         <p>{{ product.description }}</p>
 
         <div class="bottom">
-            <span class="price">${{ product.price }}</span>
+            <div class="price-wrapper">
+                <span v-if="product.discount" class="old-price">
+                    ${{ product.price }}
+                </span>
+
+                <span class="price">
+                    ${{
+                        product.discount
+                            ? (product.price * (1 - product.discount / 100)).toFixed(2)
+                            : product.price
+                    }}
+                </span>
+            </div>
 
             <button :disabled="product.stock === 0" @click="handleAdd">
                 Add to Cart
@@ -59,57 +88,128 @@ const handleAdd = () => {
         transform: translateY(-4px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
+}
 
-    img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        cursor: pointer;
+/* IMAGE WRAPPER */
+
+img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* STOCK BADGE */
+
+.badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    color: white;
+}
+
+.badge.in {
+    background: #2ecc71;
+    /* green */
+}
+
+.badge.out {
+    background: crimson;
+}
+
+/* CONTENT */
+
+h3 {
+    margin: 16px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+p {
+    margin: 0 16px 16px;
+    font-size: 14px;
+    color: #666;
+}
+
+.bottom {
+    margin-top: auto;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #111;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+
+    &:hover {
+        background: #333;
     }
 
-    h3 {
-        margin: 16px;
-        font-size: 18px;
-        cursor: pointer;
+    &:disabled {
+        background: #aaa;
+        cursor: not-allowed;
     }
+}
 
-    p {
-        margin: 0 16px 16px;
-        font-size: 14px;
-        color: #666;
-    }
+.image-wrapper {
+    position: relative;
+}
 
-    .bottom {
-        margin-top: auto;
-        padding: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+/* BADGES */
 
-    .price {
-        font-weight: 600;
-        font-size: 16px;
-    }
+.badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    color: white;
+}
 
-    button {
-        padding: 8px 14px;
-        border: none;
-        border-radius: 6px;
-        background: #111;
-        color: white;
-        cursor: pointer;
-        font-size: 13px;
-        transition: background 0.2s ease;
+/* DISCOUNT */
+.badge.discount {
+    background: #e74c3c;
+}
 
-        &:hover {
-            background: #333;
-        }
+/* LOW STOCK */
+.badge.low {
+    background: #f39c12;
+}
 
-        &:disabled {
-            background: #aaa;
-            cursor: not-allowed;
-        }
-    }
+/* OUT OF STOCK */
+.badge.out {
+    background: crimson;
+}
+
+/* PRICE WRAPPER */
+
+.price-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.old-price {
+    font-size: 13px;
+    text-decoration: line-through;
+    color: #888;
+}
+
+.price {
+    font-weight: 700;
+    font-size: 16px;
 }
 </style>
