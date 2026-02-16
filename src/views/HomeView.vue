@@ -11,10 +11,8 @@ const productsStore = useProductsStore();
 
         <!-- Controls -->
         <div class="controls">
-            <!-- SEARCH -->
             <input type="text" placeholder="Search..." v-model="productsStore.searchQuery" />
 
-            <!-- CATEGORY FILTER -->
             <select v-model="productsStore.selectedCategory">
                 <option value="all">All</option>
                 <option value="electronics">Electronics</option>
@@ -23,7 +21,6 @@ const productsStore = useProductsStore();
                 <option value="home">Home</option>
             </select>
 
-            <!-- SORT -->
             <select v-model="productsStore.sortOption">
                 <option value="none">No sort</option>
                 <option value="price-asc">Price ↑</option>
@@ -31,13 +28,12 @@ const productsStore = useProductsStore();
             </select>
         </div>
 
-        <!-- PRODUCTS GRID -->
+        <!-- FLEX PRODUCTS -->
         <div class="grid">
             <ProductCard v-for="product in productsStore.filteredProducts" :key="product.id" :product="product" />
         </div>
 
-        <!-- EMPTY STATE -->
-        <p v-if="productsStore.filteredProducts.length === 0">
+        <p v-if="productsStore.filteredProducts.length === 0" class="empty">
             No products found.
         </p>
     </div>
@@ -45,25 +41,58 @@ const productsStore = useProductsStore();
 
 <style scoped lang="scss">
 .home {
-    padding: 24px;
-}
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
 
-.controls {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-
-    input,
-    select {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+    h1 {
+        margin-bottom: 30px;
     }
 }
 
+/* Controls */
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+
+    input,
+    select {
+        padding: 10px 14px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        min-width: 180px;
+        transition: all 0.2s ease;
+
+        &:focus {
+            outline: none;
+            border-color: #111;
+        }
+    }
+
+    input {
+        flex: 1;
+    }
+}
+
+/* FLEX Layout */
+
 .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.empty {
+    margin-top: 40px;
+    text-align: center;
+    color: #777;
 }
 </style>
