@@ -2,6 +2,10 @@
 import type { Product } from "@/types/product";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cart";
+import { useWishlistStore } from "@/stores/wishlist";
+import { useToastStore } from "@/stores/toast";
+
+const wishlistStore = useWishlistStore();
 
 const props = defineProps<{
     product: Product;
@@ -9,15 +13,24 @@ const props = defineProps<{
 
 const router = useRouter();
 const cartStore = useCartStore();
+const toast = useToastStore()
 
 const goToDetails = () => {
     router.push(`/product/${props.product.id}`);
 };
 
 const handleAdd = () => {
-    if (props.product.stock > 0) {
-        cartStore.addToCart(props.product);
+    if (props.product.stock === 0) {
+        toast.show("Product is out of stock", "error");
+        return;
     }
+
+    cartStore.addToCart(props.product);
+    toast.show("Product added to cart", "success");
+};
+
+const toggleWishlist = () => {
+    wishlistStore.toggle(props.product.id);
 };
 </script>
 
@@ -29,14 +42,20 @@ const handleAdd = () => {
                 -{{ product.discount }}%
             </span>
 
+            <button class="wishlist" @click.stop="toggleWishlist">
+                <span :class="[
+                    'heart',
+                    wishlistStore.isInWishlist(product.id) ? 'active' : '']">
+                    ♥
+                </span>
+            </button>
+
             <!-- LOW STOCK BADGE -->
+            <span v-if="product.stock === 0" class="badge out">
+                Out of stock
+            </span>
             <span v-else-if="product.stock > 0 && product.stock < 5" class="badge low">
                 Low Stock
-            </span>
-
-            <!-- OUT OF STOCK -->
-            <span v-else-if="product.stock === 0" class="badge out">
-                Out of Stock
             </span>
 
             <img :src="product.image" :alt="product.title" @click="goToDetails" />
@@ -211,5 +230,38 @@ button {
 .price {
     font-weight: 700;
     font-size: 16px;
+}
+
+/* WISHLIST */
+
+.wishlist {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.heart {
+    font-size: 16px;
+    color: #aaa;
+    transition: color 0.2s ease;
+}
+
+.heart.active {
+    color: crimson;
 }
 </style>

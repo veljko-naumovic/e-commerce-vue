@@ -3,10 +3,12 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useProductsStore } from "@/stores/products";
 import { useCartStore } from "@/stores/cart";
+import { useToastStore } from "@/stores/toast";
 
 const route = useRoute();
 const productsStore = useProductsStore();
 const cartStore = useCartStore();
+const toast = useToastStore()
 
 const productId = Number(route.params.id);
 
@@ -16,6 +18,7 @@ const product = computed(() =>
 
 const handleAdd = () => {
     if (product.value && product.value.stock > 0) {
+        toast.show("Product added to cart", "success");
         cartStore.addToCart(product.value);
     }
 };

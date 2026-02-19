@@ -3,6 +3,8 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useCartStore } from "@/stores/cart";
+import { useWishlistStore } from "@/stores/wishlist";
+
 
 const cartStore = useCartStore();
 
@@ -15,6 +17,9 @@ const logout = () => {
     auth.logout();
     router.push("/");
 }
+
+const wishlistStore = useWishlistStore();
+
 </script>
 
 <template>
@@ -31,6 +36,9 @@ const logout = () => {
 
             <RouterLink v-if="auth.isAuthenticated" to="/admin">
                 Admin
+            </RouterLink>
+            <RouterLink to="/wishlist" class="wishlist-link">
+                ❤️ {{ wishlistStore.items.length }}
             </RouterLink>
         </nav>
 
@@ -72,5 +80,9 @@ const logout = () => {
         color: white;
         cursor: pointer;
     }
+}
+
+.wishlist-link {
+    font-weight: 600;
 }
 </style>
