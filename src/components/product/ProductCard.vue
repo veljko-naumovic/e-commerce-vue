@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import { useWishlistStore } from "@/stores/wishlist";
 import { useToastStore } from "@/stores/toast";
+import { ref } from "vue";
 
 const wishlistStore = useWishlistStore();
 
@@ -19,18 +20,47 @@ const goToDetails = () => {
     router.push(`/product/${props.product.id}`);
 };
 
+// const handleAdd = () => {
+//     if (props.product.stock === 0) {
+//         toast.show("Product is out of stock", "error");
+//         return;
+//     }
+
+//     cartStore.addToCart(props.product);
+//     toast.show("Product added to cart", "success");
+// };
+
+const toggleWishlist = () => {
+    wishlistStore.toggle(props.product.id);
+};
+
+const quantity = ref(1);
+
+const increase = () => {
+    if (quantity.value < props.product.stock) {
+        quantity.value++;
+    }
+};
+
+const decrease = () => {
+    if (quantity.value > 1) {
+        quantity.value--;
+    }
+};
+
 const handleAdd = () => {
     if (props.product.stock === 0) {
         toast.show("Product is out of stock", "error");
         return;
     }
 
-    cartStore.addToCart(props.product);
-    toast.show("Product added to cart", "success");
-};
+    cartStore.addToCart(props.product, quantity.value);
+    toast.show(
+        `${quantity.value} x ${props.product.title} added to cart`,
+        "success"
+    );
 
-const toggleWishlist = () => {
-    wishlistStore.toggle(props.product.id);
+    quantity.value = 1;
 };
 </script>
 
@@ -67,7 +97,7 @@ const toggleWishlist = () => {
 
         <p>{{ product.description }}</p>
 
-        <div class="bottom">
+        <!-- <div class="bottom">
             <div class="price-wrapper">
                 <span v-if="product.discount" class="old-price">
                     ${{ product.price }}
@@ -80,6 +110,17 @@ const toggleWishlist = () => {
                             : product.price
                     }}
                 </span>
+            </div>
+
+            <button :disabled="product.stock === 0" @click="handleAdd">
+                Add to Cart
+            </button>
+        </div> -->
+        <div class="bottom">
+            <div class="quantity">
+                <button @click="decrease">-</button>
+                <span>{{ quantity }}</span>
+                <button @click="increase">+</button>
             </div>
 
             <button :disabled="product.stock === 0" @click="handleAdd">
@@ -263,5 +304,27 @@ button {
 
 .heart.active {
     color: crimson;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    button {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: #eee;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    span {
+        min-width: 20px;
+        text-align: center;
+        font-weight: 600;
+    }
 }
 </style>

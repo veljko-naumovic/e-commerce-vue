@@ -36,15 +36,15 @@ export const useCartStore = defineStore("cart", () => {
 	};
 
 	// add to chart
-	const addToCart = (product: Product) => {
+	const addToCart = (product: Product, quantity: number = 1) => {
 		const existing = items.value.find(
 			(item) => item.product.id === product.id,
 		);
 
 		if (existing) {
-			existing.quantity++;
+			existing.quantity += quantity;
 		} else {
-			items.value.push({ product, quantity: 1 });
+			items.value.push({ product, quantity });
 		}
 
 		persist();
