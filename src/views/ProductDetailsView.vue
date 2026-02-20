@@ -79,47 +79,53 @@ onMounted(async () => {
 </script>
 
 <template>
-    <SkeletonDetails v-if="productsStore.isDetailsLoading" />
+    <Transition name="fade" mode="out-in">
+        <div :key="productsStore.isDetailsLoading ? 'loading' : 'content'">
 
-    <div v-else-if="product" class="details">
-        <img :src="product.image" :alt="product.title" />
+            <SkeletonDetails v-if="productsStore.isDetailsLoading" />
 
-        <div class="info">
-            <h1>{{ product.title }}</h1>
+            <div v-else-if="product" class="details">
+                <img :src="product.image" :alt="product.title" />
 
-            <p class="price">${{ product.price }}</p>
+                <div class="info">
+                    <h1>{{ product.title }}</h1>
 
-            <p v-if="existingQuantity > 0">
-                Already in cart: {{ existingQuantity }}
-            </p>
+                    <p class="price">${{ product.price }}</p>
 
-            <p class="description">
-                {{ product.description }}
-            </p>
+                    <p v-if="existingQuantity > 0">
+                        Already in cart: {{ existingQuantity }}
+                    </p>
 
-            <p v-if="product.stock > 0 && product.stock < 5" class="low-stock">
-                Only {{ product.stock }} left in stock!
-            </p>
+                    <p class="description">
+                        {{ product.description }}
+                    </p>
 
-            <p v-if="product.stock === 0" class="out">
-                Out of stock
-            </p>
+                    <p v-if="product.stock > 0 && product.stock < 5" class="low-stock">
+                        Only {{ product.stock }} left in stock!
+                    </p>
 
-            <div class="quantity">
-                <button @click="decrease">-</button>
-                <span>{{ quantity }}</span>
-                <button @click="increase">+</button>
+                    <p v-if="product.stock === 0" class="out">
+                        Out of stock
+                    </p>
+
+                    <div class="quantity">
+                        <button @click="decrease">-</button>
+                        <span>{{ quantity }}</span>
+                        <button @click="increase">+</button>
+                    </div>
+
+                    <button class="add" :disabled="product.stock === 0" @click="handleAdd">
+                        Add to Cart
+                    </button>
+                </div>
             </div>
 
-            <button class="add" :disabled="product.stock === 0" @click="handleAdd">
-                Add to Cart
-            </button>
-        </div>
-    </div>
+            <div v-else class="not-found">
+                <p>Product not found.</p>
+            </div>
 
-    <div v-else class="not-found">
-        <p>Product not found.</p>
-    </div>
+        </div>
+    </Transition>
 </template>
 
 <style scoped lang="scss">
@@ -205,5 +211,22 @@ onMounted(async () => {
             cursor: not-allowed;
         }
     }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+    transform: translateY(0);
 }
 </style>
