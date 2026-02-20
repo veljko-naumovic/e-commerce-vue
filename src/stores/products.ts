@@ -11,6 +11,8 @@ export const useProductsStore = defineStore("products", () => {
 	const searchQuery = ref("");
 	const selectedCategory = ref<ProductCategory | "all">("all");
 	const sortOption = ref<SortOption>("none");
+	const isLoading = ref(false);
+	const isDetailsLoading = ref(false);
 
 	// 🎯 FILTER + SEARCH + SORT
 	const filteredProducts = computed(() => {
@@ -96,6 +98,32 @@ export const useProductsStore = defineStore("products", () => {
 		}, 800);
 	};
 
+	const fetchProducts = async () => {
+		isLoading.value = true;
+
+		await new Promise((resolve) => {
+			setTimeout(resolve, 1200); // simulacija API poziva
+		});
+
+		products.value = mockProducts;
+
+		isLoading.value = false;
+	};
+
+	const fetchProductById = async (id: number) => {
+		isDetailsLoading.value = true;
+
+		await new Promise((resolve) => {
+			setTimeout(resolve, 900); // simulacija API poziva
+		});
+
+		const product = mockProducts.find((p) => p.id === id);
+
+		isDetailsLoading.value = false;
+
+		return product || null;
+	};
+
 	return {
 		products,
 		searchQuery,
@@ -110,5 +138,9 @@ export const useProductsStore = defineStore("products", () => {
 		updateProduct,
 		deleteProduct,
 		updatePriceOptimistic,
+		isLoading,
+		fetchProducts,
+		isDetailsLoading,
+		fetchProductById,
 	};
 });

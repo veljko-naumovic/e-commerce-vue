@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import { useProductsStore } from "@/stores/products";
 import ProductCard from "@/components/product/ProductCard.vue";
+import { onMounted } from "vue";
+import SkeletonCard from "@/components/ui/SkeletonCard.vue";
 
 const productsStore = useProductsStore();
+
+onMounted(() => {
+    productsStore.fetchProducts();
+});
+
+
+
 </script>
+
+
 
 <template>
     <div class="home">
@@ -30,7 +41,10 @@ const productsStore = useProductsStore();
 
         <!-- FLEX PRODUCTS -->
         <div class="grid">
-            <ProductCard v-for="product in productsStore.filteredProducts" :key="product.id" :product="product" />
+            <SkeletonCard v-if="productsStore.isLoading" v-for="n in 6" :key="n" />
+
+            <ProductCard v-else v-for="product in productsStore.filteredProducts" :key="product.id"
+                :product="product" />
         </div>
 
         <p v-if="productsStore.filteredProducts.length === 0" class="empty">

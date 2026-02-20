@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useProductsStore } from "@/stores/products";
 import { useCartStore } from "@/stores/cart";
 import { useToastStore } from "@/stores/toast";
+import { Product } from "@/types/product";
+import SkeletonDetails from "@/components/ui/SkeletonDetails.vue";
 
 const route = useRoute();
 const productsStore = useProductsStore();
@@ -12,21 +14,15 @@ const toast = useToastStore();
 
 const productId = Number(route.params.id);
 
-const product = computed(() =>
-    productsStore.getProductById(productId)
-);
-
 const quantity = ref(1);
+const product = ref<Product | null>(null);
 
 // When load product
 watch(
-    () => product.value,
-    (newProduct) => {
-        if (!newProduct) return;
-
-        const existingQty = cartStore.getProductQuantity(newProduct.id);
-
-        quantity.value = existingQty > 0 ? existingQty : 1;
+    () => route.params.id,
+    async (newId) => {
+        if (!newId) return;
+        product.value = await productsStore.fetchProductById(Number(newId));
     },
     { immediate: true }
 );
@@ -74,24 +70,33 @@ const existingQuantity = computed(() => {
     return cartStore.getProductQuantity(product.value.id);
 });
 
+
+
+onMounted(async () => {
+    product.value = await productsStore.fetchProductById(productId);
+});
+
 </script>
 
 <template>
-    <div v-if="product" class="details">
+    <SkeletonDetails v-if="productsStore.isDetailsLoading" />
+
+    <div v-else-if="product" class="details">
         <img :src="product.image" :alt="product.title" />
 
         <div class="info">
             <h1>{{ product.title }}</h1>
 
             <p class="price">${{ product.price }}</p>
+
             <p v-if="existingQuantity > 0">
                 Already in cart: {{ existingQuantity }}
             </p>
+
             <p class="description">
                 {{ product.description }}
             </p>
 
-            <!-- STOCK INFO -->
             <p v-if="product.stock > 0 && product.stock < 5" class="low-stock">
                 Only {{ product.stock }} left in stock!
             </p>
@@ -100,7 +105,6 @@ const existingQuantity = computed(() => {
                 Out of stock
             </p>
 
-            <!-- QUANTITY SELECTOR -->
             <div class="quantity">
                 <button @click="decrease">-</button>
                 <span>{{ quantity }}</span>
