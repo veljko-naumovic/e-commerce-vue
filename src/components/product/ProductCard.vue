@@ -20,16 +20,6 @@ const goToDetails = () => {
     router.push(`/product/${props.product.id}`);
 };
 
-// const handleAdd = () => {
-//     if (props.product.stock === 0) {
-//         toast.show("Product is out of stock", "error");
-//         return;
-//     }
-
-//     cartStore.addToCart(props.product);
-//     toast.show("Product added to cart", "success");
-// };
-
 const toggleWishlist = () => {
     wishlistStore.toggle(props.product.id);
 };
@@ -97,25 +87,22 @@ const handleAdd = () => {
 
         <p>{{ product.description }}</p>
 
-        <!-- <div class="bottom">
-            <div class="price-wrapper">
-                <span v-if="product.discount" class="old-price">
-                    ${{ product.price }}
-                </span>
+        <div class="price-wrapper">
+            <span v-if="product.discount" class="save">
+                Save $
+                {{
+                    (product.price * (product.discount / 100)).toFixed(2)
+                }}
+            </span>
 
-                <span class="price">
-                    ${{
-                        product.discount
-                            ? (product.price * (1 - product.discount / 100)).toFixed(2)
-                            : product.price
-                    }}
-                </span>
-            </div>
-
-            <button :disabled="product.stock === 0" @click="handleAdd">
-                Add to Cart
-            </button>
-        </div> -->
+            <span :class="['price', { discounted: product.discount }]">
+                ${{
+                    product.discount
+                        ? (product.price * (1 - product.discount / 100)).toFixed(2)
+                        : product.price
+                }}
+            </span>
+        </div>
         <div class="bottom">
             <div class="quantity">
                 <button @click="decrease">-</button>
@@ -193,6 +180,12 @@ p {
     margin: 0 16px 16px;
     font-size: 14px;
     color: #666;
+
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .bottom {
@@ -258,8 +251,10 @@ button {
 /* PRICE WRAPPER */
 
 .price-wrapper {
+    margin: 0 16px 12px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
 .old-price {
@@ -268,9 +263,19 @@ button {
     color: #888;
 }
 
+.price.discounted {
+    color: #e74c3c;
+}
+
 .price {
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
+    color: #e74c3c;
+}
+
+.save {
+    font-size: 12px;
+    color: #2ecc71;
 }
 
 /* WISHLIST */

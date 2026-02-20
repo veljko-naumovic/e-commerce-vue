@@ -3,6 +3,7 @@ import { useProductsStore } from "@/stores/products";
 import ProductCard from "@/components/product/ProductCard.vue";
 import { onMounted } from "vue";
 import SkeletonCard from "@/components/ui/SkeletonCard.vue";
+import ErrorState from "@/components/ui/ErrorState.vue";
 
 const productsStore = useProductsStore();
 
@@ -17,6 +18,10 @@ onMounted(() => {
 
 
 <template>
+    <div v-if="productsStore.error">
+        {{ productsStore.error }}
+        <button @click="productsStore.fetchProducts()">Retry</button>
+    </div>
     <div class="home">
         <h1>Shop</h1>
 
@@ -38,7 +43,7 @@ onMounted(() => {
                 <option value="price-desc">Price ↓</option>
             </select>
         </div>
-
+        <ErrorState v-if="productsStore.error" :message="productsStore.error" :onRetry="productsStore.fetchProducts" />
         <!-- FLEX PRODUCTS -->
         <div class="grid">
             <SkeletonCard v-if="productsStore.isLoading" v-for="n in 6" :key="n" />

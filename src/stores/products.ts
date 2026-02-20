@@ -1,17 +1,18 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { mockProducts } from "@/data/products";
 import type { Product, ProductCategory } from "@/types/product";
-
+import * as productsApi from "@/api/productsApi";
 export type SortOption = "price-asc" | "price-desc" | "none";
 
 export const useProductsStore = defineStore("products", () => {
-	const products = ref<Product[]>(mockProducts);
+	const products = ref<Product[]>([]);
+	const error = ref<string | null>(null);
 
 	const searchQuery = ref("");
 	const selectedCategory = ref<ProductCategory | "all">("all");
 	const sortOption = ref<SortOption>("none");
 	const isLoading = ref(false);
+
 	const isDetailsLoading = ref(false);
 
 	// 🎯 FILTER + SEARCH + SORT
@@ -61,21 +62,21 @@ export const useProductsStore = defineStore("products", () => {
 	const getProductById = (id: number) => {
 		return products.value.find((p) => p.id === id);
 	};
-	/////////////////////
-	const addProduct = (product: Product) => {
-		products.value.push(product);
+
+	const addProduct = async (product: Product) => {
+		const created = await productsApi.createProduct(product);
+		products.value.push(created);
 	};
 
-	// ✏️ UPDATE
-	const updateProduct = (updated: Product) => {
-		const index = products.value.findIndex((p) => p.id === updated.id);
-		if (index !== -1) {
-			products.value[index] = updated;
-		}
+	const updateProduct = async (updated: Product) => {
+		const result = await productsApi.updateProduct(updated);
+		products.value = products.value.map((p) =>
+			p.id === result.id ? result : p,
+		);
 	};
 
-	// 🗑 DELETE
-	const deleteProduct = (id: number) => {
+	const deleteProduct = async (id: number) => {
+		await productsApi.deleteProduct(id);
 		products.value = products.value.filter((p) => p.id !== id);
 	};
 
@@ -90,7 +91,7 @@ export const useProductsStore = defineStore("products", () => {
 
 		// Simulacija API call-a
 		setTimeout(() => {
-			const success = true; // promeni u false da simuliraš error
+			const success = true;
 
 			if (!success) {
 				product.price = oldPrice;
@@ -100,28 +101,29 @@ export const useProductsStore = defineStore("products", () => {
 
 	const fetchProducts = async () => {
 		isLoading.value = true;
+		error.value = null;
 
-		await new Promise((resolve) => {
-			setTimeout(resolve, 1200); // simulacija API poziva
-		});
-
-		products.value = mockProducts;
-
-		isLoading.value = false;
+		try {
+			products.value = await productsApi.getProducts();
+		} catch (err: any) {
+			error.value = err.message;
+		} finally {
+			isLoading.value = false;
+		}
 	};
 
 	const fetchProductById = async (id: number) => {
 		isDetailsLoading.value = true;
+		error.value = null;
 
-		await new Promise((resolve) => {
-			setTimeout(resolve, 900); // simulacija API poziva
-		});
-
-		const product = mockProducts.find((p) => p.id === id);
-
-		isDetailsLoading.value = false;
-
-		return product || null;
+		try {
+			return await productsApi.getProductById(id);
+		} catch (err: any) {
+			error.value = err.message;
+			return null;
+		} finally {
+			isDetailsLoading.value = false;
+		}
 	};
 
 	return {
@@ -139,6 +141,7 @@ export const useProductsStore = defineStore("products", () => {
 		deleteProduct,
 		updatePriceOptimistic,
 		isLoading,
+		error,
 		fetchProducts,
 		isDetailsLoading,
 		fetchProductById,

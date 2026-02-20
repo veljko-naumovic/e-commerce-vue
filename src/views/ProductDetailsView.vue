@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useProductsStore } from "@/stores/products";
 import { useCartStore } from "@/stores/cart";
 import { useToastStore } from "@/stores/toast";
-import { Product } from "@/types/product";
+import type { Product } from "@/types/product";
 import SkeletonDetails from "@/components/ui/SkeletonDetails.vue";
+import ErrorState from "@/components/ui/ErrorState.vue";
 
 const route = useRoute();
 const productsStore = useProductsStore();
 const cartStore = useCartStore();
 const toast = useToastStore();
 
-const productId = Number(route.params.id);
-
-const quantity = ref(1);
 const product = ref<Product | null>(null);
+const quantity = ref(1);
 
-// When load product
+/* ---------------- FETCH LOGIC ---------------- */
+
 watch(
     () => route.params.id,
     async (newId) => {
@@ -26,6 +26,26 @@ watch(
     },
     { immediate: true }
 );
+
+/* ---------------- CART SYNC ---------------- */
+
+const existingQuantity = computed(() => {
+    if (!product.value) return 0;
+    return cartStore.getProductQuantity(product.value.id);
+});
+
+watch(
+    () => product.value,
+    (newProduct) => {
+        if (!newProduct) return;
+
+        const existingQty = cartStore.getProductQuantity(newProduct.id);
+        quantity.value = existingQty > 0 ? existingQty : 1;
+    },
+    { immediate: true }
+);
+
+/* ---------------- QUANTITY ---------------- */
 
 const increase = () => {
     if (!product.value) return;
@@ -43,6 +63,8 @@ const decrease = () => {
         quantity.value--;
     }
 };
+
+/* ---------------- ADD TO CART ---------------- */
 
 const handleAdd = () => {
     if (!product.value) return;
@@ -64,26 +86,20 @@ const handleAdd = () => {
 
     quantity.value = cartStore.getProductQuantity(product.value.id);
 };
-
-const existingQuantity = computed(() => {
-    if (!product.value) return 0;
-    return cartStore.getProductQuantity(product.value.id);
-});
-
-
-
-onMounted(async () => {
-    product.value = await productsStore.fetchProductById(productId);
-});
-
 </script>
 
 <template>
     <Transition name="fade" mode="out-in">
         <div :key="productsStore.isDetailsLoading ? 'loading' : 'content'">
 
-            <SkeletonDetails v-if="productsStore.isDetailsLoading" />
+            <!-- ERROR -->
+            <ErrorState v-if="productsStore.error" :message="productsStore.error"
+                :onRetry="() => productsStore.fetchProductById(Number(route.params.id))" />
 
+            <!-- LOADING -->
+            <SkeletonDetails v-else-if="productsStore.isDetailsLoading" />
+
+            <!-- CONTENT -->
             <div v-else-if="product" class="details">
                 <img :src="product.image" :alt="product.title" />
 
@@ -120,6 +136,7 @@ onMounted(async () => {
                 </div>
             </div>
 
+            <!-- NOT FOUND -->
             <div v-else class="not-found">
                 <p>Product not found.</p>
             </div>
