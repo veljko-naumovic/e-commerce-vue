@@ -1,102 +1,3 @@
-<!-- <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useProductsStore } from "@/stores/products";
-import { useCartStore } from "@/stores/cart";
-import { useToastStore } from "@/stores/toast";
-
-const route = useRoute();
-const productsStore = useProductsStore();
-const cartStore = useCartStore();
-const toast = useToastStore()
-
-const productId = Number(route.params.id);
-
-const product = computed(() =>
-    productsStore.getProductById(productId)
-);
-
-const handleAdd = () => {
-    if (product.value && product.value.stock > 0) {
-        toast.show("Product added to cart", "success");
-        cartStore.addToCart(product.value);
-    }
-};
-</script>
-
-<template>
-    <div v-if="product" class="details">
-        <img :src="product.image" :alt="product.title" />
-
-        <div class="info">
-            <h1>{{ product.title }}</h1>
-
-            <p class="description">
-                {{ product.description }}
-            </p>
-
-            <p class="price">
-                ${{ product.price }}
-            </p>
-
-            <p :class="[
-                'stock',
-                product.stock > 0 ? 'in' : 'out'
-            ]">
-                {{ product.stock > 0 ? 'In stock' : 'Out of stock' }}
-            </p>
-
-            <button :disabled="product.stock === 0" @click="handleAdd">
-                Add to Cart
-            </button>
-        </div>
-    </div>
-
-    <p v-else>Product not found.</p>
-</template>
-
-<style scoped lang="scss">
-.details {
-    display: grid;
-    grid-template-columns: 400px 1fr;
-    gap: 40px;
-    padding: 40px;
-
-    img {
-        width: 100%;
-        border-radius: 8px;
-    }
-
-    .price {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .stock.in {
-        color: green;
-    }
-
-    .stock.out {
-        color: red;
-    }
-
-    button {
-        margin-top: 16px;
-        padding: 10px 16px;
-        background: black;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 6px;
-
-        &:disabled {
-            background: #aaa;
-            cursor: not-allowed;
-        }
-    }
-}
-</style> -->
-
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -115,41 +16,9 @@ const product = computed(() =>
     productsStore.getProductById(productId)
 );
 
-// const quantity = ref(1);
-
-// const increase = () => {
-//     if (product.value && quantity.value < product.value.stock) {
-//         quantity.value++;
-//     }
-// };
-
-// const decrease = () => {
-//     if (quantity.value > 1) {
-//         quantity.value--;
-//     }
-// };
-
-// const handleAdd = () => {
-//     if (!product.value) return;
-
-//     if (product.value.stock === 0) {
-//         toast.show("Product is out of stock", "error");
-//         return;
-//     }
-
-//     cartStore.addToCart(product.value, quantity.value);
-
-//     toast.show(
-//         `${quantity.value} x ${product.value.title} added to cart`,
-//         "success"
-//     );
-
-//     quantity.value = 1;
-// };
-
 const quantity = ref(1);
 
-// Kada se učita proizvod
+// When load product
 watch(
     () => product.value,
     (newProduct) => {
@@ -199,6 +68,12 @@ const handleAdd = () => {
 
     quantity.value = cartStore.getProductQuantity(product.value.id);
 };
+
+const existingQuantity = computed(() => {
+    if (!product.value) return 0;
+    return cartStore.getProductQuantity(product.value.id);
+});
+
 </script>
 
 <template>
@@ -209,8 +84,8 @@ const handleAdd = () => {
             <h1>{{ product.title }}</h1>
 
             <p class="price">${{ product.price }}</p>
-            <p v-if="cartStore.getProductQuantity(product.id) > 0">
-                Already in cart: {{ cartStore.getProductQuantity(product.id) }}
+            <p v-if="existingQuantity > 0">
+                Already in cart: {{ existingQuantity }}
             </p>
             <p class="description">
                 {{ product.description }}
