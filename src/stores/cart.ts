@@ -74,6 +74,12 @@ export const useCartStore = defineStore("cart", () => {
 		persist();
 	};
 
+	const getProductQuantity = (productId: number) => {
+		const item = items.value.find((item) => item.product.id === productId);
+
+		return item ? item.quantity : 0;
+	};
+
 	return {
 		items,
 		totalItems,
@@ -81,6 +87,7 @@ export const useCartStore = defineStore("cart", () => {
 		addToCart,
 		removeFromCart,
 		updateQuantity,
+		getProductQuantity,
 		hydrate,
 	};
 });

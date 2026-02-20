@@ -98,7 +98,7 @@ const handleAdd = () => {
 </style> -->
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useProductsStore } from "@/stores/products";
 import { useCartStore } from "@/stores/cart";
@@ -115,10 +115,60 @@ const product = computed(() =>
     productsStore.getProductById(productId)
 );
 
+// const quantity = ref(1);
+
+// const increase = () => {
+//     if (product.value && quantity.value < product.value.stock) {
+//         quantity.value++;
+//     }
+// };
+
+// const decrease = () => {
+//     if (quantity.value > 1) {
+//         quantity.value--;
+//     }
+// };
+
+// const handleAdd = () => {
+//     if (!product.value) return;
+
+//     if (product.value.stock === 0) {
+//         toast.show("Product is out of stock", "error");
+//         return;
+//     }
+
+//     cartStore.addToCart(product.value, quantity.value);
+
+//     toast.show(
+//         `${quantity.value} x ${product.value.title} added to cart`,
+//         "success"
+//     );
+
+//     quantity.value = 1;
+// };
+
 const quantity = ref(1);
 
+// Kada se učita proizvod
+watch(
+    () => product.value,
+    (newProduct) => {
+        if (!newProduct) return;
+
+        const existingQty = cartStore.getProductQuantity(newProduct.id);
+
+        quantity.value = existingQty > 0 ? existingQty : 1;
+    },
+    { immediate: true }
+);
+
 const increase = () => {
-    if (product.value && quantity.value < product.value.stock) {
+    if (!product.value) return;
+
+    const existingQty = cartStore.getProductQuantity(product.value.id);
+    const total = existingQty + quantity.value;
+
+    if (total < product.value.stock) {
         quantity.value++;
     }
 };
@@ -132,8 +182,11 @@ const decrease = () => {
 const handleAdd = () => {
     if (!product.value) return;
 
-    if (product.value.stock === 0) {
-        toast.show("Product is out of stock", "error");
+    const existingQty = cartStore.getProductQuantity(product.value.id);
+    const total = existingQty + quantity.value;
+
+    if (total > product.value.stock) {
+        toast.show("Not enough stock available", "error");
         return;
     }
 
@@ -144,7 +197,7 @@ const handleAdd = () => {
         "success"
     );
 
-    quantity.value = 1;
+    quantity.value = cartStore.getProductQuantity(product.value.id);
 };
 </script>
 
@@ -156,7 +209,9 @@ const handleAdd = () => {
             <h1>{{ product.title }}</h1>
 
             <p class="price">${{ product.price }}</p>
-
+            <p v-if="cartStore.getProductQuantity(product.id) > 0">
+                Already in cart: {{ cartStore.getProductQuantity(product.id) }}
+            </p>
             <p class="description">
                 {{ product.description }}
             </p>
