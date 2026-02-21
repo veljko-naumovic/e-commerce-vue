@@ -6,7 +6,6 @@ import { useCartStore } from "@/stores/cart";
 import { useToastStore } from "@/stores/toast";
 import type { Product } from "@/types/product";
 import SkeletonDetails from "@/components/ui/SkeletonDetails.vue";
-import ErrorState from "@/components/ui/ErrorState.vue";
 
 const route = useRoute();
 const productsStore = useProductsStore();
@@ -93,11 +92,11 @@ const handleAdd = () => {
         <div :key="productsStore.isDetailsLoading ? 'loading' : 'content'">
 
             <!-- ERROR -->
-            <ErrorState v-if="productsStore.error" :message="productsStore.error"
-                :onRetry="() => productsStore.fetchProductById(Number(route.params.id))" />
+            <!-- <ErrorState v-if="productsStore.error" :message="productsStore.error"
+                :onRetry="() => productsStore.fetchProductById(Number(route.params.id))" /> -->
 
             <!-- LOADING -->
-            <SkeletonDetails v-else-if="productsStore.isDetailsLoading" />
+            <SkeletonDetails v-if="productsStore.isDetailsLoading" />
 
             <!-- CONTENT -->
             <div v-else-if="product" class="details">
