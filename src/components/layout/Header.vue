@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useCartStore } from "@/stores/cart";
 import { useWishlistStore } from "@/stores/wishlist";
+import MiniCart from "@/components/cart/MiniCart.vue";
 
+const showMiniCart = ref(false);
+let timeout: ReturnType<typeof setTimeout> | null = null;
+
+const handleEnter = () => {
+    showMiniCart.value = true;
+};
+
+const handleLeave = () => {
+    showMiniCart.value = false;
+};
 
 const cartStore = useCartStore();
 
@@ -30,9 +41,17 @@ const wishlistStore = useWishlistStore();
 
         <nav>
             <RouterLink to="/">Shop</RouterLink>
-            <RouterLink to="/cart">
-                Cart ({{ cartStore.totalItems }})
-            </RouterLink>
+            <div class="cart-wrapper">
+                <div class="cart-hover-area" @mouseenter="handleEnter" @mouseleave="handleLeave">
+                    <RouterLink to="/cart">
+                        Cart ({{ cartStore.totalItems }})
+                    </RouterLink>
+
+                    <Transition name="dropdown">
+                        <MiniCart v-if="showMiniCart" />
+                    </Transition>
+                </div>
+            </div>
 
             <RouterLink v-if="auth.isAuthenticated" to="/admin">
                 Admin
@@ -84,5 +103,14 @@ const wishlistStore = useWishlistStore();
 
 .wishlist-link {
     font-weight: 600;
+}
+
+.cart-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-hover-area {
+    position: relative;
 }
 </style>
