@@ -29,6 +29,14 @@ const routes = [
 				component: () => import("@/views/WishlistView.vue"),
 			},
 			{
+				path: "/checkout",
+				component: () => import("@/views/CheckoutView.vue"),
+			},
+			{
+				path: "/success",
+				component: () => import("@/views/SuccessView.vue"),
+			},
+			{
 				path: "admin",
 				component: () => import("@/views/AdminView.vue"),
 				meta: { requiresAuth: true },

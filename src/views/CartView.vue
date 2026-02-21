@@ -83,7 +83,7 @@ const checkout = () => {
                                     (1 - item.product.discount / 100)
                                     : item.product.price) *
                                 item.quantity
-                        ).toFixed(2)
+                            ).toFixed(2)
                         }}
                     </div>
                 </div>
@@ -103,7 +103,7 @@ const checkout = () => {
                     <span>${{ cartStore.totalPrice.toFixed(2) }}</span>
                 </div>
 
-                <button class="checkout" @click="checkout">
+                <button class="checkout" @click="router.push('/checkout')">
                     Proceed to Checkout
                 </button>
             </div>
