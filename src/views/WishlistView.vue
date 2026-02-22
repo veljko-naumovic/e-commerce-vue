@@ -16,8 +16,8 @@ const wishlistProducts = computed(() =>
         .filter((p): p is NonNullable<typeof p> => !!p)
 );
 
-const moveToCart = (productId: number) => {
-    const product = productsStore.getProductById(productId);
+const moveToCart = async (productId: string) => {
+    const product = await productsStore.fetchProductById(productId);
     if (!product) return;
 
     cartStore.addToCart(product);

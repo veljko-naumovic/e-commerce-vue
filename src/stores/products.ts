@@ -90,6 +90,10 @@ export const useProductsStore = defineStore("products", () => {
 		products.value = products.value.filter((p) => p.id !== id);
 	};
 
+	const getProductById = (id: string) => {
+		return products.value.find((p) => p.id === id) || null;
+	};
+
 	return {
 		products,
 		isLoading,
@@ -99,6 +103,7 @@ export const useProductsStore = defineStore("products", () => {
 		sortOption,
 		filteredProducts,
 		fetchProducts,
+		getProductById,
 		fetchProductById,
 		addProduct,
 		updateProduct,

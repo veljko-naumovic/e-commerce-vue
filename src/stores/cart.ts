@@ -51,7 +51,7 @@ export const useCartStore = defineStore("cart", () => {
 	};
 
 	// remove from chart
-	const removeFromCart = (productId: number) => {
+	const removeFromCart = (productId: string) => {
 		items.value = items.value.filter(
 			(item) => item.product.id !== productId,
 		);
@@ -60,7 +60,7 @@ export const useCartStore = defineStore("cart", () => {
 	};
 
 	//  update quantity
-	const updateQuantity = (productId: number, quantity: number) => {
+	const updateQuantity = (productId: string, quantity: number) => {
 		const item = items.value.find((item) => item.product.id === productId);
 
 		if (!item) return;
@@ -74,7 +74,7 @@ export const useCartStore = defineStore("cart", () => {
 		persist();
 	};
 
-	const getProductQuantity = (productId: number) => {
+	const getProductQuantity = (productId: string) => {
 		const item = items.value.find((item) => item.product.id === productId);
 
 		return item ? item.quantity : 0;
