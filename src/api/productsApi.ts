@@ -13,7 +13,7 @@ export const getProducts = async (): Promise<Product[]> => {
 };
 
 // GET BY ID
-export const getProductById = async (id: number): Promise<Product | null> => {
+export const getProductById = async (id: string): Promise<Product | null> => {
 	await delay(700);
 
 	return productsDB.find((p) => p.id === id) || null;
@@ -34,7 +34,7 @@ export const updateProduct = async (updated: Product): Promise<Product> => {
 };
 
 // DELETE
-export const deleteProduct = async (id: number) => {
+export const deleteProduct = async (id: string) => {
 	await delay(800);
 	productsDB = productsDB.filter((p) => p.id !== id);
 };

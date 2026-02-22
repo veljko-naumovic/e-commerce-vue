@@ -29,7 +29,7 @@ export const useProductsStore = defineStore("products", () => {
 		}
 	};
 
-	const fetchProductById = async (id: number) => {
+	const fetchProductById = async (id: string) => {
 		const uiStore = useUiStore();
 
 		isDetailsLoading.value = true;
@@ -71,6 +71,25 @@ export const useProductsStore = defineStore("products", () => {
 		return result;
 	});
 
+	const updateProduct = async (updated: Product) => {
+		const result = await productsApi.updateProduct(updated);
+
+		products.value = products.value.map((p) =>
+			p.id === result.id ? result : p,
+		);
+	};
+
+	const addProduct = async (product: Product) => {
+		const result = await productsApi.createProduct(product);
+
+		products.value = [...products.value, result];
+	};
+
+	const deleteProduct = async (id: string) => {
+		await productsApi.deleteProduct(id);
+		products.value = products.value.filter((p) => p.id !== id);
+	};
+
 	return {
 		products,
 		isLoading,
@@ -81,5 +100,8 @@ export const useProductsStore = defineStore("products", () => {
 		filteredProducts,
 		fetchProducts,
 		fetchProductById,
+		addProduct,
+		updateProduct,
+		deleteProduct,
 	};
 });

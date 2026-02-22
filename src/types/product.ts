@@ -1,7 +1,7 @@
 export type ProductCategory = "electronics" | "clothing" | "books" | "home";
 
 export interface Product {
-	id: number;
+	id: string;
 	title: string;
 	description: string;
 	price: number;

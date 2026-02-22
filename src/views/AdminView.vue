@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useProductsStore } from "@/stores/products";
 import type { Product } from "@/types/product";
 
@@ -8,7 +8,7 @@ const productsStore = useProductsStore();
 const editing = ref<Product | null>(null);
 
 const form = ref<Product>({
-    id: Date.now(),
+    id: crypto.randomUUID(),
     title: "",
     description: "",
     price: 0,
@@ -19,7 +19,7 @@ const form = ref<Product>({
 
 const resetForm = () => {
     form.value = {
-        id: Date.now(),
+        id: crypto.randomUUID(),
         title: "",
         description: "",
         price: 0,
@@ -30,11 +30,11 @@ const resetForm = () => {
     editing.value = null;
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
     if (editing.value) {
-        productsStore.updateProduct(form.value);
+        await productsStore.updateProduct(form.value);
     } else {
-        productsStore.addProduct(form.value);
+        await productsStore.addProduct(form.value);
     }
 
     resetForm();
@@ -45,13 +45,21 @@ const handleEdit = (product: Product) => {
     form.value = { ...product };
 };
 
-const handleDelete = (id: number) => {
+const handleDelete = (id: string) => {
     productsStore.deleteProduct(id);
 };
 
-const handlePriceChange = (id: number, value: number) => {
-    productsStore.updatePriceOptimistic(id, value);
+const handlePriceChange = async (id: string, value: number) => {
+    const product = productsStore.products.find(p => p.id === id);
+    if (!product) return;
+
+    await productsStore.updateProduct({
+        ...product,
+        price: value
+    });
 };
+
+const products = computed(() => productsStore.products);
 </script>
 
 <template>
@@ -89,7 +97,7 @@ const handlePriceChange = (id: number, value: number) => {
             </thead>
 
             <tbody>
-                <tr v-for="product in productsStore.products" :key="product.id">
+                <tr v-for="product in products" :key="product.id">
                     <td>{{ product.title }}</td>
 
                     <td>
