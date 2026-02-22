@@ -17,14 +17,14 @@ const quantity = ref(1);
 
 /* ---------------- FETCH LOGIC ---------------- */
 
-watch(
-    () => route.params.id,
-    async (newId) => {
-        if (!newId) return;
-        product.value = await productsStore.fetchProductById(Number(newId));
-    },
-    { immediate: true }
-);
+// watch(
+//     () => route.params.id,
+//     async (newId) => {
+//         if (!newId) return;
+//         product.value = await productsStore.fetchProductById(newId);
+//     },
+//     { immediate: true }
+// );
 
 /* ---------------- CART SYNC ---------------- */
 
@@ -71,9 +71,8 @@ const handleAdd = () => {
     const existingQty = cartStore.getProductQuantity(product.value.id);
     const total = existingQty + quantity.value;
 
-    if (total > product.value.stock) {
-        toast.show("Not enough stock available", "error");
-        return;
+    if (total < product.value.stock) {
+        quantity.value++;
     }
 
     cartStore.addToCart(product.value, quantity.value);
@@ -85,20 +84,26 @@ const handleAdd = () => {
 
     quantity.value = cartStore.getProductQuantity(product.value.id);
 };
+
+const loadProduct = async (id: string) => {
+    product.value = await productsStore.fetchProductById(id);
+};
+
+watch(
+    () => route.params.id,
+    (newId) => {
+        if (typeof newId === "string") {
+            loadProduct(newId);
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
     <Transition name="fade" mode="out-in">
         <div :key="productsStore.isDetailsLoading ? 'loading' : 'content'">
-
-            <!-- ERROR -->
-            <!-- <ErrorState v-if="productsStore.error" :message="productsStore.error"
-                :onRetry="() => productsStore.fetchProductById(Number(route.params.id))" /> -->
-
-            <!-- LOADING -->
             <SkeletonDetails v-if="productsStore.isDetailsLoading" />
-
-            <!-- CONTENT -->
             <div v-else-if="product" class="details">
                 <img :src="product.image" :alt="product.title" />
 

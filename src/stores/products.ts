@@ -15,9 +15,10 @@ export const useProductsStore = defineStore("products", () => {
 	const selectedCategory = ref<ProductCategory | "all">("all");
 	const sortOption = ref<SortOption>("none");
 
+	/* ---------------- FETCH ALL ---------------- */
+
 	const fetchProducts = async () => {
 		const uiStore = useUiStore();
-
 		isLoading.value = true;
 		uiStore.startLoading();
 
@@ -29,6 +30,8 @@ export const useProductsStore = defineStore("products", () => {
 		}
 	};
 
+	/* ---------------- FETCH BY ID (with cache fallback) ---------------- */
+
 	const fetchProductById = async (id: string) => {
 		const uiStore = useUiStore();
 
@@ -36,12 +39,44 @@ export const useProductsStore = defineStore("products", () => {
 		uiStore.startLoading();
 
 		try {
+			// 🔥 CACHE FIRST
+			const cached = products.value.find((p) => p.id === id);
+			if (cached) return cached;
+
 			return await productsApi.getProductById(id);
 		} finally {
 			isDetailsLoading.value = false;
 			uiStore.stopLoading();
 		}
 	};
+
+	/* ---------------- SYNC GET ---------------- */
+
+	const getProductById = (id: string) => {
+		return products.value.find((p) => p.id === id) || null;
+	};
+
+	/* ---------------- CRUD ---------------- */
+
+	const updateProduct = async (updated: Product) => {
+		const result = await productsApi.updateProduct(updated);
+
+		products.value = products.value.map((p) =>
+			p.id === result.id ? result : p,
+		);
+	};
+
+	const addProduct = async (product: Product) => {
+		const result = await productsApi.createProduct(product);
+		products.value = [...products.value, result];
+	};
+
+	const deleteProduct = async (id: string) => {
+		await productsApi.deleteProduct(id);
+		products.value = products.value.filter((p) => p.id !== id);
+	};
+
+	/* ---------------- FILTER ---------------- */
 
 	const filteredProducts = computed(() => {
 		let result = [...products.value];
@@ -71,29 +106,6 @@ export const useProductsStore = defineStore("products", () => {
 		return result;
 	});
 
-	const updateProduct = async (updated: Product) => {
-		const result = await productsApi.updateProduct(updated);
-
-		products.value = products.value.map((p) =>
-			p.id === result.id ? result : p,
-		);
-	};
-
-	const addProduct = async (product: Product) => {
-		const result = await productsApi.createProduct(product);
-
-		products.value = [...products.value, result];
-	};
-
-	const deleteProduct = async (id: string) => {
-		await productsApi.deleteProduct(id);
-		products.value = products.value.filter((p) => p.id !== id);
-	};
-
-	const getProductById = (id: string) => {
-		return products.value.find((p) => p.id === id) || null;
-	};
-
 	return {
 		products,
 		isLoading,
@@ -103,8 +115,8 @@ export const useProductsStore = defineStore("products", () => {
 		sortOption,
 		filteredProducts,
 		fetchProducts,
-		getProductById,
 		fetchProductById,
+		getProductById,
 		addProduct,
 		updateProduct,
 		deleteProduct,
