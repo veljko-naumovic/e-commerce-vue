@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useWishlistStore = defineStore("wishlist", () => {
-	const items = ref<number[]>([]); // čuvamo samo product IDs
+	const items = ref<string[]>([]); // čuvamo samo product IDs
 
 	const persist = () => {
 		localStorage.setItem("wishlist", JSON.stringify(items.value));
@@ -15,7 +15,7 @@ export const useWishlistStore = defineStore("wishlist", () => {
 		}
 	};
 
-	const toggle = (productId: number) => {
+	const toggle = (productId: string) => {
 		if (items.value.includes(productId)) {
 			items.value = items.value.filter((id) => id !== productId);
 		} else {
@@ -24,11 +24,11 @@ export const useWishlistStore = defineStore("wishlist", () => {
 		persist();
 	};
 
-	const isInWishlist = (productId: number) => {
+	const isInWishlist = (productId: string) => {
 		return items.value.includes(productId);
 	};
 
-	const remove = (productId: number) => {
+	const remove = (productId: string) => {
 		items.value = items.value.filter((id) => id !== productId);
 		persist();
 	};

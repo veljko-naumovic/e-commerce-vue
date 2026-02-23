@@ -7,28 +7,26 @@ const cartStore = useCartStore();
 const router = useRouter();
 const toast = useToastStore();
 
-const increase = (id: number) => {
+const increase = (id: string) => {
     const item = cartStore.items.find(i => i.product.id === id);
     if (!item) return;
 
     cartStore.updateQuantity(id, item.quantity + 1);
 };
 
-const decrease = (id: number) => {
+const decrease = (id: string) => {
     const item = cartStore.items.find(i => i.product.id === id);
     if (!item) return;
 
     cartStore.updateQuantity(id, item.quantity - 1);
 };
 
-const remove = (id: number) => {
+const remove = (id: string) => {
     cartStore.removeFromCart(id);
     toast.show("Item removed from cart", "info");
 };
 
-const checkout = () => {
-    toast.show("Checkout not implemented (demo)", "info");
-};
+
 </script>
 
 <template>
@@ -200,7 +198,7 @@ const checkout = () => {
         border: none;
         color: crimson;
         cursor: pointer;
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .subtotal {
