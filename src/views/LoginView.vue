@@ -34,25 +34,19 @@ const handleLogin = () => {
             <p class="subtitle">
                 Access the admin dashboard
             </p>
-
             <input v-model="email" type="email" placeholder="Email" />
-
             <input v-model="password" type="password" placeholder="Password" />
-
             <button @click="handleLogin">
                 Login
             </button>
-
             <p v-if="error" class="error">
                 {{ error }}
             </p>
-
             <div class="hint">
                 <small>
                     Demo credentials: admin@test.com / 1234
                 </small>
             </div>
-
         </div>
     </div>
 </template>

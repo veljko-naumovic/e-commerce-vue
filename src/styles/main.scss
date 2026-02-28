@@ -8,3 +8,17 @@ body {
 .clickable {
     cursor: pointer;
 }
+
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}

@@ -2,12 +2,9 @@
 import { computed } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useRouter } from "vue-router";
-
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-
-
 const cartStore = useCartStore();
 const router = useRouter();
 
@@ -18,7 +15,6 @@ const goToCart = () => {
 };
 
 const isCartPage = computed(() => route.path === "/cart");
-
 </script>
 
 <template>
@@ -28,30 +24,46 @@ const isCartPage = computed(() => route.path === "/cart");
         <div v-if="items.length === 0" class="empty">
             Cart is empty
         </div>
+        <div v-else>
+            <!-- Scrollable products -->
+            <div class="items">
+                <div v-for="item in items" :key="item.product.id" class="mini-item">
+                    <img :src="item.product.image" />
 
-        <div v-else class="items">
-            <div v-for="item in items" :key="item.product.id" class="mini-item">
-                <img :src="item.product.image" />
-
-                <div class="info">
-                    <span class="title">
-                        {{ item.product.title }}
-                    </span>
-
-                    <span class="qty">
-                        {{ item.quantity }} × $
-                        {{
-                            item.product.discount
-                                ? (item.product.price *
-                                    (1 - item.product.discount / 100)).toFixed(2)
-                                : item.product.price
-                        }}
-                    </span>
+                    <div class="info">
+                        <span class="title">
+                            {{ item.product.title }}
+                        </span>
+                        <span class="qty">
+                            {{ item.quantity }} × $
+                            {{
+                                item.product.discount
+                                    ? (item.product.price *
+                                        (1 - item.product.discount / 100)).toFixed(2)
+                                    : item.product.price
+                            }}
+                        </span>
+                        <span class="subtotal">
+                            $
+                            {{
+                                (
+                                    (item.product.discount
+                                        ? item.product.price *
+                                        (1 - item.product.discount / 100)
+                                        : item.product.price) *
+                                    item.quantity
+                                ).toFixed(2)
+                            }}
+                        </span>
+                    </div>
                 </div>
             </div>
-
-            <div class="total">
-                Total: ${{ cartStore.totalPrice.toFixed(2) }}
+            <!-- Fixed total -->
+            <div class="cart-total">
+                <span class="total">Total</span>
+                <span class="amount">
+                    ${{ cartStore.totalPrice.toFixed(2) }}
+                </span>
             </div>
 
             <button v-if="!isCartPage" class="go" @click="goToCart">
@@ -59,6 +71,7 @@ const isCartPage = computed(() => route.path === "/cart");
             </button>
         </div>
     </div>
+
 
 </template>
 
@@ -69,78 +82,126 @@ const isCartPage = computed(() => route.path === "/cart");
     right: 0;
     width: 320px;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
     padding: 16px;
     z-index: 1000;
 
-    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    max-height: 420px;
+
+    h4 {
+        margin-bottom: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        flex-shrink: 0;
+        color: #111;
+    }
 }
 
+/* Scrollable product list */
+.items {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Product */
 .mini-item {
     display: flex;
     gap: 10px;
-    margin-bottom: 12px;
+    padding: 10px 0;
+    align-items: center;
+    border-bottom: 1px solid #f2f2f2;
+    transition: background 0.2s ease;
+
+    &:hover {
+        background: #f9f9f9;
+    }
 
     img {
         width: 50px;
         height: 50px;
         object-fit: cover;
         border-radius: 6px;
+        flex-shrink: 0;
     }
 
     .info {
         flex: 1;
+        min-width: 0;
         display: flex;
         flex-direction: column;
-        font-size: 13px;
     }
 
     .title {
         font-weight: 600;
+        font-size: 13px;
+        color: #111;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .qty {
+        font-size: 12px;
         color: #777;
+        margin-top: 2px;
+    }
+
+    .subtotal {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111;
+        margin-top: 2px;
     }
 }
 
-.total {
+/* Total */
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    border-top: 2px solid #eaeaea;
+    background: #fafafa;
+    padding: 14px 0 0;
+    font-size: 15px;
     font-weight: 700;
-    margin-top: 10px;
+    flex-shrink: 0;
+
+    .amount,
+    .total {
+        font-size: 16px;
+        color: #111;
+    }
+
 }
 
+/* Button */
 .go {
     margin-top: 12px;
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #111;
     color: white;
     cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: #333;
+    }
 }
 
 .empty {
     text-align: center;
-    padding: 10px 0;
+    padding: 12px 0;
     color: #777;
-}
-
-.dropdown-enter-active,
-.dropdown-leave-active {
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.dropdown-enter-from,
-.dropdown-leave-to {
-    opacity: 0;
-    transform: translateY(-8px);
-}
-
-.dropdown-enter-to,
-.dropdown-leave-from {
-    opacity: 1;
-    transform: translateY(0);
+    font-size: 14px;
 }
 </style>

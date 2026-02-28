@@ -16,13 +16,18 @@ export const useCartStore = defineStore("cart", () => {
 	);
 
 	//  total price
+	const getFinalPrice = (product: Product) => {
+		return product.discount
+			? product.price * (1 - product.discount / 100)
+			: product.price;
+	};
+
 	const totalPrice = computed(() =>
 		items.value.reduce(
-			(sum, item) => sum + item.product.price * item.quantity,
+			(sum, item) => sum + getFinalPrice(item.product) * item.quantity,
 			0,
 		),
 	);
-
 	//  check local storage
 	const persist = () => {
 		localStorage.setItem("cart", JSON.stringify(items.value));

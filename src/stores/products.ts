@@ -15,8 +15,6 @@ export const useProductsStore = defineStore("products", () => {
 	const selectedCategory = ref<ProductCategory | "all">("all");
 	const sortOption = ref<SortOption>("none");
 
-	/* ---------------- FETCH ALL ---------------- */
-
 	const fetchProducts = async () => {
 		const uiStore = useUiStore();
 		isLoading.value = true;
@@ -30,8 +28,6 @@ export const useProductsStore = defineStore("products", () => {
 		}
 	};
 
-	/* ---------------- FETCH BY ID (with cache fallback) ---------------- */
-
 	const fetchProductById = async (id: string) => {
 		const uiStore = useUiStore();
 
@@ -39,7 +35,6 @@ export const useProductsStore = defineStore("products", () => {
 		uiStore.startLoading();
 
 		try {
-			// 🔥 CACHE FIRST
 			const cached = products.value.find((p) => p.id === id);
 			if (cached) return cached;
 
@@ -50,13 +45,9 @@ export const useProductsStore = defineStore("products", () => {
 		}
 	};
 
-	/* ---------------- SYNC GET ---------------- */
-
 	const getProductById = (id: string) => {
 		return products.value.find((p) => p.id === id) || null;
 	};
-
-	/* ---------------- CRUD ---------------- */
 
 	const updateProduct = async (updated: Product) => {
 		const result = await productsApi.updateProduct(updated);
@@ -75,8 +66,6 @@ export const useProductsStore = defineStore("products", () => {
 		await productsApi.deleteProduct(id);
 		products.value = products.value.filter((p) => p.id !== id);
 	};
-
-	/* ---------------- FILTER ---------------- */
 
 	const filteredProducts = computed(() => {
 		let result = [...products.value];

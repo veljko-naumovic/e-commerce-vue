@@ -15,7 +15,7 @@ const toastStore = useToastStore();
 <style scoped lang="scss">
 .toast-container {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     display: flex;
     flex-direction: column;
@@ -24,12 +24,13 @@ const toastStore = useToastStore();
 }
 
 .toast {
-    min-width: 220px;
-    padding: 12px 16px;
-    border-radius: 8px;
+    min-width: 240px;
+    padding: 14px 18px;
+    border-radius: 10px;
     color: white;
     font-size: 14px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
     animation: slideIn 0.25s ease;
 }
 
@@ -54,6 +55,21 @@ const toastStore = useToastStore();
     to {
         transform: translateX(0);
         opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .toast-container {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 20px;
+        align-items: center;
+    }
+
+    .toast {
+        width: 90vw;
+        max-width: 340px;
     }
 }
 </style>

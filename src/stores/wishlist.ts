@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useWishlistStore = defineStore("wishlist", () => {
-	const items = ref<string[]>([]); // čuvamo samo product IDs
+	const items = ref<string[]>([]); // only product ids
 
 	const persist = () => {
 		localStorage.setItem("wishlist", JSON.stringify(items.value));

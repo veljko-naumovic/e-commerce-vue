@@ -26,31 +26,25 @@ const remove = (id: string) => {
     toast.show("Item removed from cart", "info");
 };
 
-
 </script>
 
 <template>
     <div class="cart-page">
-
         <h1>Your Cart</h1>
-
         <div v-if="cartStore.items.length === 0" class="empty">
             <p>Your cart is empty.</p>
             <button @click="router.push('/')">
                 Go Shopping
             </button>
         </div>
-
         <div v-else class="cart-layout">
-
-            <!-- LEFT: ITEMS -->
+            <!-- Left: Items -->
             <div class="cart-items">
                 <div v-for="item in cartStore.items" :key="item.product.id" class="cart-item">
                     <img :src="item.product.image" />
 
                     <div class="info">
                         <h3>{{ item.product.title }}</h3>
-
                         <p class="price">
                             $
                             {{
@@ -60,7 +54,6 @@ const remove = (id: string) => {
                                     : item.product.price
                             }}
                         </p>
-
                         <div class="quantity">
                             <button @click="decrease(item.product.id)">-</button>
                             <span>{{ item.quantity }}</span>
@@ -86,26 +79,21 @@ const remove = (id: string) => {
                     </div>
                 </div>
             </div>
-
-            <!-- RIGHT: SUMMARY -->
+            <!-- Right: summary -->
             <div class="cart-summary">
                 <h2>Order Summary</h2>
-
                 <div class="summary-row">
                     <span>Items</span>
                     <span>{{ cartStore.totalItems }}</span>
                 </div>
-
                 <div class="summary-row">
                     <span>Total</span>
                     <span>${{ cartStore.totalPrice.toFixed(2) }}</span>
                 </div>
-
                 <button class="checkout" @click="router.push('/checkout')">
                     Proceed to Checkout
                 </button>
             </div>
-
         </div>
     </div>
 </template>
@@ -155,6 +143,11 @@ const remove = (id: string) => {
     border-radius: 10px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     margin-bottom: 20px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
 
     img {
         width: 100px;
@@ -169,6 +162,7 @@ const remove = (id: string) => {
 
     h3 {
         margin-bottom: 8px;
+        font-size: 16px;
     }
 
     .price {
@@ -199,11 +193,14 @@ const remove = (id: string) => {
         color: crimson;
         cursor: pointer;
         font-size: 14px;
+        padding: 0;
     }
 
     .subtotal {
         font-weight: 700;
         font-size: 16px;
+        min-width: 80px;
+        text-align: right;
     }
 }
 
@@ -237,6 +234,89 @@ const remove = (id: string) => {
         border-radius: 6px;
         cursor: pointer;
         font-weight: 600;
+    }
+}
+
+@media (max-width: 992px) {
+    .cart-layout {
+        gap: 24px;
+    }
+
+    .cart-page {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .cart-page {
+        padding: 20px 16px;
+    }
+
+    .cart-layout {
+        flex-direction: column;
+    }
+
+    .cart-summary {
+        position: static;
+        width: 100%;
+    }
+
+    /* CART ITEM - vertical card */
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .cart-item img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .cart-item .subtotal {
+        text-align: left;
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .cart-item .quantity {
+        gap: 12px;
+    }
+
+    .cart-item .remove {
+        font-size: 15px;
+    }
+
+    .cart-layout {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .cart-items,
+    .cart-summary {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .cart-summary {
+        position: static;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .cart-page {
+        padding: 16px 12px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .cart-item img {
+        height: 180px;
     }
 }
 </style>
