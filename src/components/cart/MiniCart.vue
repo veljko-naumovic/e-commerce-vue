@@ -96,7 +96,7 @@ const isCartPage = computed(() => route.path === "/cart");
         font-size: 15px;
         font-weight: 600;
         flex-shrink: 0;
-        color: #111;
+        color: var(--color-primary);
     }
 }
 
@@ -138,7 +138,7 @@ const isCartPage = computed(() => route.path === "/cart");
     .title {
         font-weight: 600;
         font-size: 13px;
-        color: #111;
+        color: var(--color-primary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
