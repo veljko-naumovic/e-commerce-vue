@@ -134,53 +134,59 @@ const handleAdd = () => {
     min-width: 260px;
     max-width: 300px;
 
-    background: white;
-    border-radius: 12px;
+    background: var(--color-surface);
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     display: flex;
     flex-direction: column;
 
     &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
     }
 
     .image-wrapper {
         position: relative;
+        overflow: hidden;
 
         img {
             width: 100%;
             height: 200px;
             object-fit: cover;
             cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 1;
+
+            &:hover {
+                transform: scale(1.05);
+            }
         }
 
         .badge {
             position: absolute;
             top: 12px;
             right: 12px;
-            padding: 6px 10px;
-            font-size: 12px;
+            padding: 6px 12px;
+            font-size: 11px;
             font-weight: 600;
-            border-radius: 20px;
+            border-radius: 999px;
             color: white;
+            letter-spacing: 0.4px;
+            overflow: hidden;
+            z-index: 2;
 
             &.discount {
-                background: #e74c3c;
+                background: var(--color-danger);
             }
 
             &.low {
-                background: #f39c12;
+                background: var(--color-warning);
             }
 
             &.out {
-                background: crimson;
-            }
-
-            &.in {
-                background: #2ecc71;
+                background: var(--color-danger);
             }
         }
 
@@ -189,71 +195,73 @@ const handleAdd = () => {
             top: 12px;
             left: 12px;
             background: white;
-            border: none;
+            border: 1px solid var(--border-color);
             border-radius: 50%;
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.15s ease;
+            transition: all 0.2s ease;
+            z-index: 2;
 
             &:hover {
-                transform: scale(1.1);
+                background: #f9fafb;
+                transform: scale(1.05);
             }
 
             .heart {
                 font-size: 16px;
-                color: #aaa;
+                color: #bbb;
                 transition: color 0.2s ease;
 
                 &.active {
-                    color: crimson;
+                    color: var(--color-danger);
                 }
             }
         }
     }
 
     h3 {
-        margin: 16px;
-        font-size: 18px;
+        margin: 18px 16px 8px;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--color-text);
         cursor: pointer;
     }
 
     p {
         margin: 0 16px 16px;
         font-size: 14px;
-        color: #666;
+        color: var(--color-text-light);
 
         display: -webkit-box;
-        -webkit-line-clamp: 2;
         line-clamp: 2;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
 
     .price-wrapper {
-        margin: 0 16px 12px;
+        margin: 0 16px 16px;
         display: flex;
         align-items: center;
         gap: 8px;
 
         .old-price {
-            font-size: 14px;
+            font-size: 13px;
             text-decoration: line-through;
-            color: #999;
-            margin-top: 3px;
+            color: #9ca3af;
         }
 
         .price {
             font-weight: 700;
             font-size: 20px;
-            color: #111;
+            color: var(--color-primary);
 
             &.discounted {
-                color: #e74c3c;
+                color: var(--color-danger);
             }
         }
     }
@@ -264,23 +272,26 @@ const handleAdd = () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
 
         button {
-            padding: 8px 14px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 6px;
-            background: #111;
+            border-radius: 8px;
+            background: var(--color-primary);
             color: white;
             cursor: pointer;
             font-size: 13px;
-            transition: background 0.2s ease;
+            font-weight: 600;
+            transition: all 0.2s ease;
 
             &:hover {
-                background: #333;
+                background: var(--color-primary-hover);
+                transform: translateY(-1px);
             }
 
             &:disabled {
-                background: #aaa;
+                background: #d1d5db;
                 cursor: not-allowed;
             }
         }
@@ -289,33 +300,33 @@ const handleAdd = () => {
     .quantity {
         display: inline-flex;
         align-items: center;
-        background: #f5f5f5;
+        background: #f3f4f6;
         border-radius: 999px;
         padding: 4px;
 
         button {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border: none;
             background: white;
             border-radius: 50%;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            padding: 0;
-            color: #111;
+            color: var(--color-primary);
             cursor: pointer;
             transition: background 0.2s ease;
 
             &:hover {
-                background: #eee;
+                background: #e5e7eb;
             }
         }
 
         span {
-            min-width: 24px;
+            min-width: 22px;
             text-align: center;
             font-weight: 600;
             font-size: 14px;
+            color: var(--color-text);
         }
     }
 }

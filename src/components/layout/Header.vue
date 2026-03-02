@@ -140,7 +140,7 @@ const isCartPage = computed(() => route.path === "/cart");
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    background: #111;
+    background: var(--color-primary);
     color: white;
     position: relative;
 
@@ -241,7 +241,7 @@ const isCartPage = computed(() => route.path === "/cart");
     box-shadow: -6px 0 20px rgba(0, 0, 0, 0.15);
 
     a {
-        color: #111;
+        color: var(--color-primary);
         text-decoration: none;
         font-size: 16px;
     }

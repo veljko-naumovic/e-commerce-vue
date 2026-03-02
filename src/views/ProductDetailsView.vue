@@ -210,7 +210,7 @@ watch(
         .price {
             font-size: 28px;
             font-weight: 700;
-            color: #111;
+            color: var(--color-primary);
 
             &.discounted {
                 color: #e74c3c;
@@ -270,14 +270,14 @@ watch(
         padding: 12px 24px;
         border: none;
         border-radius: 8px;
-        background: #111;
+        background: var(--color-primary);
         color: white;
         cursor: pointer;
         font-weight: 600;
         transition: background 0.2s ease;
 
         &:hover {
-            background: #333;
+            background: var(--color-primary-hover);
         }
 
         &:disabled {

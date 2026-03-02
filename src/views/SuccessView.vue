@@ -48,7 +48,7 @@ const router = useRouter();
 
 button {
     padding: 12px 24px;
-    background: #111;
+    background: var(--color-primary);
     color: white;
     border: none;
     border-radius: 6px;
@@ -58,7 +58,7 @@ button {
 }
 
 button:hover {
-    background: #333;
+    background: var(--color-primary-hover);
 }
 
 @media (max-width: 768px) {

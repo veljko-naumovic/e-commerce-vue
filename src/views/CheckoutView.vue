@@ -123,7 +123,7 @@ const submitOrder = async () => {
 
         &:focus {
             outline: none;
-            border-color: #111;
+            border-color: var(--color-primary);
         }
     }
 
@@ -133,14 +133,14 @@ const submitOrder = async () => {
         padding: 14px;
         border: none;
         border-radius: 6px;
-        background: #111;
+        background: var(--color-primary);
         color: white;
         cursor: pointer;
         font-weight: 600;
         transition: background 0.2s ease;
 
         &:hover {
-            background: #333;
+            background: var(--color-primary-hover);
         }
 
         &:disabled {

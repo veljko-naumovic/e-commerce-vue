@@ -57,7 +57,7 @@ const handleLogin = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #111, #2c2c2c);
+    background: linear-gradient(135deg, var(--color-primary), #2c2c2c);
     padding: 20px;
 }
 
@@ -92,7 +92,7 @@ const handleLogin = () => {
 
         &:focus {
             outline: none;
-            border-color: #111;
+            border-color: var(--color-primary);
         }
     }
 
@@ -101,14 +101,14 @@ const handleLogin = () => {
         padding: 12px;
         border-radius: 8px;
         border: none;
-        background: #111;
+        background: var(--color-primary);
         color: white;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s ease;
 
         &:hover {
-            background: #333;
+            background: var(--color-primary-hover);
         }
     }
 

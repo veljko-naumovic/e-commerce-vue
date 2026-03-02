@@ -1,9 +1,10 @@
 :root {
-    --color-primary: #4f46e5;
-    --color-primary-hover: #4338ca;
+    --color-primary: #111827;
+    --color-primary-hover: #0f172a;
 
-    --color-danger: #e11d48;
-    --color-success: #16a34a;
+    --color-danger: #9f1239;
+    --color-warning: #b45309;
+    --color-success: #166534;
 
     --color-text: #111827;
     --color-text-light: #6b7280;
@@ -12,5 +13,4 @@
     --color-surface: #ffffff;
 
     --border-color: #e5e7eb;
-    --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.06);
 }

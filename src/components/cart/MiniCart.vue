@@ -153,7 +153,7 @@ const isCartPage = computed(() => route.path === "/cart");
     .subtotal {
         font-size: 13px;
         font-weight: 600;
-        color: #111;
+        color: var(--color-primary);
         margin-top: 2px;
     }
 }
@@ -174,7 +174,7 @@ const isCartPage = computed(() => route.path === "/cart");
     .amount,
     .total {
         font-size: 16px;
-        color: #111;
+        color: var(--color-primary);
     }
 
 }
@@ -186,7 +186,7 @@ const isCartPage = computed(() => route.path === "/cart");
     padding: 10px;
     border: none;
     border-radius: 8px;
-    background: #111;
+    background: var(--color-primary);
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -194,7 +194,7 @@ const isCartPage = computed(() => route.path === "/cart");
     flex-shrink: 0;
 
     &:hover {
-        background: #333;
+        background: var(--color-primary-hover);
     }
 }
 

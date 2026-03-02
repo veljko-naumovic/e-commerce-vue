@@ -122,11 +122,11 @@ const moveToCart = async (productId: string) => {
     }
 
     .move {
-        background: #111;
+        background: var(--color-primary);
         color: white;
 
         &:hover {
-            background: #333;
+            background: var(--color-primary-hover);
         }
     }
 

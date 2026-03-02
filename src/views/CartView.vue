@@ -116,7 +116,7 @@ const remove = (id: string) => {
     button {
         margin-top: 20px;
         padding: 10px 20px;
-        background: #111;
+        background: var(--color-primary);
         color: white;
         border: none;
         border-radius: 6px;
@@ -228,7 +228,7 @@ const remove = (id: string) => {
         margin-top: 20px;
         width: 100%;
         padding: 12px;
-        background: #111;
+        background: var(--color-primary);
         color: white;
         border: none;
         border-radius: 6px;

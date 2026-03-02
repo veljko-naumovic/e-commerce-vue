@@ -181,7 +181,7 @@ const products = computed(() => productsStore.products);
     margin-bottom: 24px;
     font-size: 18px;
     font-weight: 600;
-    color: #111;
+    color: var(--color-primary);
 }
 
 .form-grid {
@@ -212,7 +212,7 @@ const products = computed(() => productsStore.products);
 
         &:focus {
             outline: none;
-            border-color: #111;
+            border-color: var(--color-primary);
             box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
         }
     }
@@ -242,11 +242,11 @@ const products = computed(() => productsStore.products);
 }
 
 .form-actions button:first-child {
-    background: #111;
+    background: var(--color-primary);
     color: white;
 
     &:hover {
-        background: #333;
+        background: var(--color-primary-hover);
     }
 }
 
@@ -270,7 +270,7 @@ table {
 }
 
 thead {
-    background: #111;
+    background: var(--color-primary);
     color: white;
 
     th {
