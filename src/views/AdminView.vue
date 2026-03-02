@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useProductsStore } from "@/stores/products";
 import type { Product } from "@/types/product";
 
 const productsStore = useProductsStore();
 const editing = ref<Product | null>(null);
+
+onMounted(() => {
+    if (!productsStore.products.length) {
+        productsStore.fetchProducts();
+    }
+});
 
 const form = ref<Product>({
     id: crypto.randomUUID(),
