@@ -13,7 +13,7 @@ SCSS
 Vite
 
 # Features
-🛍 Product Catalog
+Product Catalog
 
 Responsive product grid
 
