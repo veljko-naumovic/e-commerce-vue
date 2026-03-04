@@ -57,7 +57,7 @@ const isCartPage = computed(() => route.path === "/cart");
         <!-- Left -->
         <div class="left">
             <div class="logo" @click="$router.push('/')">
-                VueCommerce
+                E-Commerce
             </div>
         </div>
 
@@ -174,7 +174,7 @@ const isCartPage = computed(() => route.path === "/cart");
     }
 
     button {
-        background: crimson;
+        background: var(--color-danger);
         border: none;
         padding: 6px 12px;
         color: white;
