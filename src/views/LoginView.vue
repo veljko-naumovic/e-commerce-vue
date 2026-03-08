@@ -4,8 +4,8 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useToastStore } from "@/stores/toast";
 
-const email = ref("");
-const password = ref("");
+const email = ref("admin@test.com");
+const password = ref("1234");
 const error = ref("");
 
 const router = useRouter();
